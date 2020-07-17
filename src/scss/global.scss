@@ -1,6 +1,14 @@
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   background-color: #252526;
   color: #d4d4d4;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.car-emoji {
+  transform: scaleX(-1);
+  display: inline-block;
 }
