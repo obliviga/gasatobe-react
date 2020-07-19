@@ -1,5 +1,5 @@
-import React from 'react'
-import GooglePlacesAutocomplete, { geocodeByAddress} from 'react-google-places-autocomplete';
+import React from 'react';
+import GooglePlacesAutocomplete, { geocodeByAddress } from 'react-google-places-autocomplete';
 import distance from 'google-distance-matrix';
 
 distance.key(process.env.REACT_APP_GOOGLE_MAPS_API_KEY);
@@ -7,21 +7,21 @@ distance.key(process.env.REACT_APP_GOOGLE_MAPS_API_KEY);
 distance.units('imperial');
 
 // Defining object to store coordinates both points
-let points = {
-	pointA: null,
-  pointB: null
+const points = {
+  pointA: null,
+  pointB: null,
 };
 
 function getDistance() {
-  let origins = [`${points.pointA}`];
-  let destinations = [`${points.pointB}`];
+  const origins = [`${points.pointA}`];
+  const destinations = [`${points.pointB}`];
 
-  distance.matrix(origins, destinations, function (err, distances) {
+  distance.matrix(origins, destinations, (err, distances) => {
     if (err) {
       console.log(err);
     }
 
-    if (distances.status === 'OK' ) {
+    if (distances.status === 'OK') {
       console.log(distances);
 
       // If the distance can't be calculated due to the impossibility of driving from Point A to B
@@ -45,7 +45,7 @@ function getPointA(data) {
     if (points.pointB !== null) {
       getDistance();
     }
-  }, reason => {
+  }, (reason) => {
     console.error(reason); // Error!
   });
 }
@@ -58,13 +58,13 @@ function getPointB(data) {
     if (points.pointA !== null) {
       getDistance();
     }
-  }, reason => {
+  }, (reason) => {
     console.error(reason);
   });
 }
 
 function Inputs() {
-  return (      
+  return (
     <div>
       <GooglePlacesAutocomplete
         // Passing data from selected value to function
@@ -78,7 +78,7 @@ function Inputs() {
         idPrefix="pointB"
       />
     </div>
-  )
+  );
 }
 
 export default Inputs;
