@@ -1,37 +1,37 @@
 .emoji-container {
   max-height: 38px;
   width: 100%;
-}
 
-.car-emoji {
-  transform: scaleX(-1);
-  display: inline-block;
-
-  cursor: pointer;
-
-  &.animate {
-    pointer-events: none;
-    animation-name: driveAway;
-    animation-duration: 2s;
-    animation-fill-mode: forwards;
-    position: fixed;
+  .car-emoji {
+    transform: scaleX(-1);
+    display: inline-block;
+  
+    cursor: pointer;
+  
+    &.animate {
+      pointer-events: none;
+      animation-name: driveAway;
+      animation-duration: 2s;
+      animation-fill-mode: forwards;
+      position: fixed;
+    }
   }
-}
-
-.explosion {
-  width: 32px;
-  height: 38px;
-  animation-name: explode;
-  animation-duration: 1s;
-  animation-fill-mode: forwards;
-}
-
-@keyframes driveAway {
-  0%   {margin-left: 0; opacity: 1;}
-  100% {margin-left: 80%; opacity: 0;}
-}
-
-@keyframes explode {
-  0%   {opacity: 1;}
-  100% {opacity: 0;}
+  
+  .explosion {
+    width: 32px;
+    height: 38px;
+    animation-name: explode;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+  }
+  
+  @keyframes driveAway {
+    0%   {margin-left: 0; opacity: 1;}
+    100% {margin-left: 80%; opacity: 0;}
+  }
+  
+  @keyframes explode {
+    0%   {opacity: 1;}
+    100% {opacity: 0;}
+  }
 }
