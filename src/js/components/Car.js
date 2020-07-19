@@ -3,29 +3,29 @@
 
 import React, { useState } from 'react';
 
-import '../scss/car.scss';
-import explosion from '../images/explosion.gif';
+import '../../scss/car.scss';
+import explosion from '../../images/explosion.gif';
 
 function Car() {
   // Initial state
   const [animate, addClass] = useState('');
 
   // Add class on click
-  function handleClick(e) {
+  function handleClick() {
     addClass('animate');
   }
 
   if (animate) {
     return (
-      <span>
+      <span className="emoji-container">
         <img src={explosion} className="explosion" role="presentation" />
         <span role="button" onClick={handleClick} className="car-emoji animate">🚗</span>
       </span>
     );
   }
   return (
-    <span>
-      ⛽
+    <span className="emoji-container">
+      <span className="gas-emoji">⛽</span>
       <span role="button" onClick={handleClick} className="car-emoji">🚗</span>
     </span>
   );

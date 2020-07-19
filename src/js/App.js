@@ -1,6 +1,6 @@
 import React from 'react';
-import Inputs from './Inputs';
-import Car from './Car';
+import Inputs from './components/Inputs';
+import Car from './components/Car';
 
 import 'react-google-places-autocomplete/dist/index.min.css';
 
