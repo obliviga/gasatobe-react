@@ -1,0 +1,9 @@
+{
+  "extends": "airbnb",
+  "rules": {
+    "no-console": "off",
+    "jsx-a11y/alt-text": "off",
+    "react/jsx-filename-extension": "off",
+    "jsx-a11y/accessible-emoji": "off"
+  }
+}
