@@ -1,6 +1,6 @@
 import React from 'react';
 import Inputs from './components/Inputs';
-import Car from './components/Car';
+import EmojiContainer from './components/EmojiContainer';
 
 import 'react-google-places-autocomplete/dist/index.min.css';
 
@@ -9,7 +9,7 @@ function App() {
     <div>
       <h1>
         Gasatobe
-        <Car />
+        <EmojiContainer />
       </h1>
       <h2>Find out how much you'll spend in gas travelling from Point A to B!</h2>
       <Inputs />

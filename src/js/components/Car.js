@@ -1,34 +1,24 @@
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-
 import React, { useState } from 'react';
 
-import '../../scss/car.scss';
-import explosion from '../../images/explosion.gif';
-
-function Car() {
+function Car(props) {
   // Initial state
-  const [animate, addClass] = useState('');
+  const [animate, addAnimation] = useState(false);
 
-  // Add class on click
+  // Set animation state to true
   function handleClick() {
-    addClass('animate');
+    addAnimation(true);
+
+    // Passing onClick prop to EmojiContainer's callback on <Car />
+    props.onClick();
   }
 
-  if (animate) {
-    return (
-      <span className="emoji-container">
-        <img src={explosion} className="explosion" role="presentation" />
-        <span role="button" onClick={handleClick} className="car-emoji animate">🚗</span>
-      </span>
-    );
-  }
-  return (
-    <span className="emoji-container">
-      <span className="gas-emoji">⛽</span>
-      <span role="button" onClick={handleClick} className="car-emoji">🚗</span>
-    </span>
-  );
+  const CarEmoji = () => <span role="button" onClick={handleClick} className="car-emoji">🚗</span>;
+  const CarEmojiAnimated = () => <span role="button" onClick={handleClick} className="car-emoji animate">🚗</span>;
+
+  // If animate state is true, render CarEmojiAnimated
+  return animate ? <CarEmojiAnimated /> : <CarEmoji />;
 }
 
 export default Car;
