@@ -6,6 +6,6 @@
     "react/jsx-filename-extension": "off",
     "jsx-a11y/accessible-emoji": "off",
     "react/no-unescaped-entities": "off",
-    "react/jsx-one-expression-per-line": {"allow": "literal"}
+    "react/jsx-one-expression-per-line": "off"
   }
 }

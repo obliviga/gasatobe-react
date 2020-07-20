@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import GooglePlacesAutocomplete, { geocodeByAddress } from 'react-google-places-autocomplete';
 import googleDistanceMatrix from 'google-distance-matrix';
 
