@@ -13,8 +13,6 @@ const points = {
 };
 
 function Inputs({ parentCallback }) {
-  // const [distance, setDistance] = useState();
-
   function getDistance() {
     const origins = [`${points.pointA}`];
     const destinations = [`${points.pointB}`];
@@ -27,11 +25,9 @@ function Inputs({ parentCallback }) {
       if (distances.status === 'OK') {
         // If the distance can't be calculated due to the impossibility of driving from Point A to B
         if (distances.rows[0].elements[0].distance === undefined) {
-          console.log(`Sorry, Google Maps can't figure out how you could drive from ${distances.origin_addresses[0]} to ${distances.destination_addresses[0]}`);
+          alert(`Sorry, Google Maps can't figure out how you could drive from ${distances.origin_addresses[0]} to ${distances.destination_addresses[0]}`);
         } else {
-          // Output the driving distance between the two points
-          // setDistance(distances.rows[0].elements[0].distance.text);
-
+          // Pass the distance data to the parent App
           parentCallback(distances);
         }
       }
@@ -69,7 +65,7 @@ function Inputs({ parentCallback }) {
   return (
     <div>
       <GooglePlacesAutocomplete
-        // Passing data from selected value to function
+        // Passing data from selected value to appropriate function
         onSelect={(data) => getPointA(data)}
         placeholder="Enter place or address for Point A"
       />
