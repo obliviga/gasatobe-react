@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import GooglePlacesAutocomplete, { geocodeByAddress } from 'react-google-places-autocomplete';
-import distance from 'google-distance-matrix';
+import googleDistanceMatrix from 'google-distance-matrix';
 
-distance.key(process.env.REACT_APP_GOOGLE_MAPS_API_KEY);
+googleDistanceMatrix.key(process.env.REACT_APP_GOOGLE_MAPS_API_KEY);
 
-distance.units('imperial');
+googleDistanceMatrix.units('imperial');
 
 // Defining object to store coordinates both points
 const points = {
@@ -12,58 +12,60 @@ const points = {
   pointB: null,
 };
 
-function getDistance() {
-  const origins = [`${points.pointA}`];
-  const destinations = [`${points.pointB}`];
+function Inputs({ parentCallback }) {
+  // const [distance, setDistance] = useState();
 
-  distance.matrix(origins, destinations, (err, distances) => {
-    if (err) {
-      console.log(err);
-    }
+  function getDistance() {
+    const origins = [`${points.pointA}`];
+    const destinations = [`${points.pointB}`];
 
-    if (distances.status === 'OK') {
-      console.log(distances);
-
-      // If the distance can't be calculated due to the impossibility of driving from Point A to B
-      if (distances.rows[0].elements[0].distance === undefined) {
-        console.log(`Sorry, Google Maps can't figure out how you could drive from ${distances.origin_addresses[0]} to ${distances.destination_addresses[0]}`);
-      } else {
-        // Output the driving distance between the two points
-        console.log(distances.rows[0].elements[0].distance.text);
+    googleDistanceMatrix.matrix(origins, destinations, (err, distances) => {
+      if (err) {
+        console.log(err);
       }
-    }
-  });
-}
 
-function getPointA(data) {
-  // Geocode the address
-  geocodeByAddress(data.description).then(() => {
-    // Retrieve the geocoded data and store it inside local points object
-    points.pointA = data.description;
+      if (distances.status === 'OK') {
+        // If the distance can't be calculated due to the impossibility of driving from Point A to B
+        if (distances.rows[0].elements[0].distance === undefined) {
+          console.log(`Sorry, Google Maps can't figure out how you could drive from ${distances.origin_addresses[0]} to ${distances.destination_addresses[0]}`);
+        } else {
+          // Output the driving distance between the two points
+          // setDistance(distances.rows[0].elements[0].distance.text);
 
-    // If Point B input has a value, then calculate the distance
-    if (points.pointB !== null) {
-      getDistance();
-    }
-  }, (reason) => {
-    console.error(reason); // Error!
-  });
-}
+          parentCallback(distances);
+        }
+      }
+    });
+  }
 
-function getPointB(data) {
-  geocodeByAddress(data.description).then(() => {
-    points.pointB = data.description;
+  function getPointA(data) {
+    // Geocode the address
+    geocodeByAddress(data.description).then(() => {
+      // Retrieve the geocoded data and store it inside local points object
+      points.pointA = data.description;
 
-    // Calculate distance only if Point A has a value
-    if (points.pointA !== null) {
-      getDistance();
-    }
-  }, (reason) => {
-    console.error(reason);
-  });
-}
+      // If Point B input has a value, then calculate the distance
+      if (points.pointB !== null) {
+        getDistance();
+      }
+    }, (reason) => {
+      console.error(reason); // Error!
+    });
+  }
 
-function Inputs() {
+  function getPointB(data) {
+    geocodeByAddress(data.description).then(() => {
+      points.pointB = data.description;
+
+      // Calculate distance only if Point A has a value
+      if (points.pointA !== null) {
+        getDistance();
+      }
+    }, (reason) => {
+      console.error(reason);
+    });
+  }
+
   return (
     <div>
       <GooglePlacesAutocomplete
