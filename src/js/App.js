@@ -1,6 +1,8 @@
 import React from 'react';
 import PlacesInputs from './components/PlacesInputs';
 import EmojiContainer from './components/EmojiContainer';
+import Years from './components/Years';
+// import GetCarData from './components/GetCarData';
 
 import 'react-google-places-autocomplete/dist/index.min.css';
 
@@ -22,6 +24,7 @@ function App() {
           <strong>{distance.rows[0].elements[0].distance.text}</strong>.
         </p>
       )}
+      <Years />
     </div>
   );
 }
