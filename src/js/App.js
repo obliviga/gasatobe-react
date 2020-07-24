@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import convert from 'xml-js';
 import fetch from 'node-fetch';
 import PlacesInputs from './components/PlacesInputs';
@@ -8,7 +8,7 @@ import 'react-google-places-autocomplete/dist/index.min.css';
 
 function App() {
   const [distance, setDistance] = useState();
-  const [year, setState] = useState('2000');
+  const [year, setState] = useState();
   const [makes, setMakes] = useState([]);
 
   // Getting data from input fields and setting the distance in state
@@ -16,13 +16,18 @@ function App() {
     setDistance(data);
   };
 
-  const fetchMakesByYear = async () => {
+  const fetchMakesByYear = () => {
     fetch(`https://www.fueleconomy.gov/ws/rest/vehicle/menu/make?year=${year}`)
+      // Using text() because response is XML
       .then((response) => response.text())
       .then((data) => {
         // Converting retrieved XML to JS object
         const makesByYearUnformatted = convert.xml2js(data, { compact: true, spaces: 2 });
+
+        // Traversing object so it's more readable
         const makesByYear = makesByYearUnformatted.menuItems.menuItem;
+
+        // Creating a local empty array for future storage
         const makesLocal = [];
 
         for (let i = 0; i < makesByYear.length; i += 1) {
@@ -30,16 +35,28 @@ function App() {
           makesLocal.push(makesByYear[i].text._text);
         }
 
+        // Store local array into makes state
         setMakes(makesLocal);
       })
       .catch((error) => console.log('error is', error));
   };
 
   const handleChangeYear = (e) => {
-    // Get the value of the year dropdown and store it in state
+    // Get the value of the year dropdown and store it in year state
     setState(e.target.value);
-    fetchMakesByYear();
   };
+
+  // Creating callback to make sure year is defined before fetching
+  const fetchYearCallback = useCallback(() => {
+    if (year) {
+      fetchMakesByYear();
+    }
+  }, [year]);
+
+  // Fetch once above dependencies are met
+  useEffect(() => {
+    fetchYearCallback();
+  }, [fetchYearCallback]);
 
   const Years = () => {
     const years = [];
