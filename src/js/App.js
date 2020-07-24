@@ -8,7 +8,7 @@ import 'react-google-places-autocomplete/dist/index.min.css';
 
 function App() {
   const [distance, setDistance] = useState();
-  const [year, setState] = useState();
+  const [year, setState] = useState('2000');
   const [makes, setMakes] = useState([]);
 
   // Getting data from input fields and setting the distance in state
@@ -17,36 +17,22 @@ function App() {
   };
 
   const fetchMakesByYear = async () => {
-    const url = `https://www.fueleconomy.gov/ws/rest/vehicle/menu/make?year=${year}`;
+    fetch(`https://www.fueleconomy.gov/ws/rest/vehicle/menu/make?year=${year}`)
+      .then((response) => response.text())
+      .then((data) => {
+        // Converting retrieved XML to JS object
+        const makesByYearUnformatted = convert.xml2js(data, { compact: true, spaces: 2 });
+        const makesByYear = makesByYearUnformatted.menuItems.menuItem;
+        const makesLocal = [];
 
-    const headers = {
-      headers: {
-        'Content-Type': 'application/xml',
-        Accept: 'application/xml',
-      },
-    };
+        for (let i = 0; i < makesByYear.length; i += 1) {
+          // For each make by year, push it into the local array defined above
+          makesLocal.push(makesByYear[i].text._text);
+        }
 
-    try {
-      const data = await fetch(url, headers);
-      const itemUnformatted = await data.text();
-
-      // Converting retrieved XML to JS object
-      const makesByYearUnformatted = convert.xml2js(itemUnformatted, { compact: true, spaces: 2 });
-      const makesByYear = makesByYearUnformatted.menuItems.menuItem;
-
-      // Create a local array to store all of the makes by year
-      const makesLocal = [];
-
-      for (let i = 0; i < makesByYear.length; i += 1) {
-        // For each make by year, push it into the local array defined above
-        makesLocal.push(makesByYear[i].text._text);
-      }
-
-      // Set the local array to the state
-      setMakes(makesLocal);
-    } catch (err) {
-      console.log(err);
-    }
+        setMakes(makesLocal);
+      })
+      .catch((error) => console.log('error is', error));
   };
 
   const handleChangeYear = (e) => {
