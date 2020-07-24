@@ -8,8 +8,10 @@ import 'react-google-places-autocomplete/dist/index.min.css';
 
 function App() {
   const [distance, setDistance] = useState();
-  const [year, setState] = useState();
+  const [year, setYear] = useState();
   const [makes, setMakes] = useState([]);
+  const [models, setModel] = useState([]);
+  const [make, setSelectedMake] = useState();
 
   // Getting data from input fields and setting the distance in state
   const getInputData = (data) => {
@@ -41,9 +43,34 @@ function App() {
       .catch((error) => console.log('error is', error));
   };
 
+  const fetchModels = () => {
+    fetch(`https://www.fueleconomy.gov/ws/rest/vehicle/menu/model?year=${year}&make=${make}`)
+      // Using text() because response is XML
+      .then((response) => response.text())
+      .then((data) => {
+        // Converting retrieved XML to JS object
+        const modelsByYearUnformatted = convert.xml2js(data, { compact: true, spaces: 2 });
+
+        // Traversing object so it's more readable
+        const modelsByYear = modelsByYearUnformatted.menuItems.menuItem;
+
+        // Creating a local empty array for future storage
+        const modelsLocal = [];
+
+        for (let i = 0; i < modelsByYear.length; i += 1) {
+          // For each make by year, push it into the local array defined above
+          modelsLocal.push(modelsByYear[i].text._text);
+        }
+
+        // Store local array into makes state
+        setModel(modelsLocal);
+      })
+      .catch((error) => console.log('error is', error));
+  };
+
   const handleChangeYear = (e) => {
     // Get the value of the year dropdown and store it in year state
-    setState(e.target.value);
+    setYear(e.target.value);
   };
 
   // Creating callback to make sure year is defined before fetching
@@ -76,16 +103,43 @@ function App() {
     );
   };
 
+  // Creating callback to make sure year is defined before fetching
+  const fetchModelsCallback = useCallback(() => {
+    if (make) {
+      fetchModels();
+    }
+  }, [make]);
+
+  // Fetch once above dependencies are met
+  useEffect(() => {
+    fetchModelsCallback();
+  }, [fetchModelsCallback]);
+
   const Makes = () => {
     function handleChangeMake(e) {
-      // TODO: Get Models
+      // Get the value of the makes dropdown and store it in make state
+      setSelectedMake(e.target.value);
     }
 
     return (
-      <select aria-label="Select a make" onChange={(e) => handleChangeMake(e)}>
+      <select aria-label="Select a make" onChange={(e) => handleChangeMake(e)} value={make}>
         {/* Populate with option elements based on the years state and its index */}
         <option value="">Select a make</option>
         {makes.map((value, index) => <option key={makes[index]}>{value}</option>)}
+      </select>
+    );
+  };
+
+  const Models = () => {
+    function handleChangeModel(e) {
+      // TODO:
+    }
+
+    return (
+      <select aria-label="Select a model" onChange={(e) => handleChangeModel(e)}>
+        {/* Populate with option elements based on the make state and its index */}
+        <option value="">Select a model</option>
+        {models.map((value, index) => <option key={makes[index]}>{value}</option>)}
       </select>
     );
   };
@@ -103,6 +157,7 @@ function App() {
       )}
       <Years />
       <Makes />
+      <Models />
     </div>
   );
 }
