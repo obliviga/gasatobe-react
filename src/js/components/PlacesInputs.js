@@ -27,8 +27,10 @@ function Inputs({ parentCallback }) {
         if (distances.rows[0].elements[0].distance === undefined) {
           alert(`Sorry, Google Maps can't figure out how you could drive from ${distances.origin_addresses[0]} to ${distances.destination_addresses[0]}`);
         } else {
+          const distanceInMeters = distances.rows[0].elements[0].distance.value;
+
           // Pass the distance data to the parent App
-          parentCallback(distances);
+          parentCallback(distances, distanceInMeters);
         }
       }
     });
