@@ -17,6 +17,7 @@ function App() {
   const [trim, setSelectedTrim] = useState();
   const [trimsArray, setTrimsObject] = useState();
   const [vehicleId, setVehicleId] = useState();
+  const [mpg, setMPG] = useState();
 
   // Getting data from input fields and setting the distance in state
   const getInputData = (data) => {
@@ -106,6 +107,25 @@ function App() {
       .catch((error) => console.log('error is', error));
   };
 
+  const fetchMPG = () => {
+    fetch(`https://www.fueleconomy.gov/ws/rest/vehicle/${vehicleId}`)
+      // Using text() because response is XML
+      .then((response) => response.text())
+      .then((data) => {
+        // Converting retrieved XML to JS object
+        const vehicleIdUnformatted = convert.xml2js(data, { compact: true, spaces: 2 });
+
+        // Traversing object so it's more readable
+        const mpgLocal = vehicleIdUnformatted.vehicle.comb08._text;
+
+        console.log(mpgLocal);
+
+        // Store local mpg into state
+        setMPG(mpgLocal);
+      })
+      .catch((error) => console.log('error is', error));
+  };
+
   // Creating callback to make sure year is defined before fetching makes
   const fetchMakesCallback = useCallback(() => {
     if (year) {
@@ -127,6 +147,13 @@ function App() {
     }
   }, [model]);
 
+  // Creating callback to make sure trim is defined before fetching MPG
+  const fetchMPGCallback = useCallback(() => {
+    if (trim) {
+      fetchMPG();
+    }
+  }, [trim]);
+
   // Fetch makes each time year is updated
   useEffect(() => {
     fetchMakesCallback();
@@ -141,6 +168,11 @@ function App() {
   useEffect(() => {
     fetchTrimsCallback();
   }, [fetchTrimsCallback]);
+
+  // Fetch trims each time model is updated
+  useEffect(() => {
+    fetchMPGCallback();
+  }, [fetchMPGCallback]);
 
   const Years = () => {
     const handleChangeYear = (e) => {
@@ -227,14 +259,18 @@ function App() {
             The driving distance from Point A to B is&nbsp;
             <strong>{distance.rows[0].elements[0].distance.text}</strong>.
           </p>
-          <h3>Select your vehicle:</h3>
         </div>
       )}
-
+      <h3>Select your vehicle:</h3>
       <Years />
       <Makes />
       <Models />
       <Trims />
+
+      <p>
+        The estimated MPG for your vehicle is&nbsp;
+        <strong>{mpg}</strong> miles per gallon.
+      </p>
     </div>
   );
 }
