@@ -3,11 +3,13 @@ import convert from 'xml-js';
 import fetch from 'node-fetch';
 import PlacesInputs from './components/PlacesInputs';
 import EmojiContainer from './components/EmojiContainer';
+import GasPrice from './components/GasPrice';
 
 import 'react-google-places-autocomplete/dist/index.min.css';
 
 function App() {
   const [distance, setDistance] = useState();
+  const [distanceInMeters, setDistanceInMeters] = useState();
   const [year, setYear] = useState();
   const [makes, setMakes] = useState([]);
   const [make, setSelectedMake] = useState();
@@ -17,11 +19,18 @@ function App() {
   const [trim, setSelectedTrim] = useState();
   const [trimsArray, setTrimsObject] = useState();
   const [vehicleId, setVehicleId] = useState();
-  const [mpg, setMPG] = useState();
+  const [mpg, setMPG] = useState(23);
+  const [gasPrice, setGasPrice] = useState(2.99);
 
   // Getting data from input fields and setting the distance in state
-  const getInputData = (data) => {
+  const getPointsData = (data, distanceInMetersParam) => {
     setDistance(data);
+    setDistanceInMeters(distanceInMetersParam);
+  };
+
+  // Getting data from gas price input field
+  const getGasPrice = (data) => {
+    setGasPrice(data);
   };
 
   const fetchMakesByYear = () => {
@@ -248,11 +257,23 @@ function App() {
     );
   };
 
+  let distanceInMiles;
+  let gallonsSpent;
+  let cost;
+
+  if (distanceInMeters !== undefined) {
+    distanceInMiles = distanceInMeters / 1609;
+    gallonsSpent = distanceInMiles / mpg;
+    cost = (gallonsSpent * gasPrice).toFixed(2);
+  }
+
+  console.log(cost);
+
   return (
     <div>
       <h1>Gasatobe <EmojiContainer /></h1>
       <h2>Find out how much you'll spend in gas travelling from Point A to B!</h2>
-      <PlacesInputs parentCallback={getInputData} />
+      <PlacesInputs parentCallback={getPointsData} />
       {distance !== undefined && (
         <div>
           <p>
@@ -268,8 +289,15 @@ function App() {
       <Trims />
 
       <p>
-        The estimated MPG for your vehicle is&nbsp;
+        The estimated combined MPG for your vehicle is&nbsp;
         <strong>{mpg}</strong> miles per gallon.
+      </p>
+
+      <GasPrice parentCallback={getGasPrice} />
+
+      <p>
+        It's going to cost about&nbsp;
+        <strong>${cost}</strong> to travel from Point A to Point B!
       </p>
     </div>
   );
