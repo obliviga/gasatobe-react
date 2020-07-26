@@ -19,8 +19,11 @@ function App() {
   const [trim, setSelectedTrim] = useState();
   const [trimsArray, setTrimsObject] = useState();
   const [vehicleId, setVehicleId] = useState();
-  const [mpg, setMPG] = useState(23);
-  const [gasPrice, setGasPrice] = useState(2.99);
+  const [mpg, setMPG] = useState();
+  const [gasPrice, setGasPrice] = useState();
+  const [makesDisabled, setMakesDisabled] = useState(true);
+  const [modelsDisabled, setModelsDisabled] = useState(true);
+  const [trimsDisabled, setTrimsDisabled] = useState(true);
 
   // Getting data from input fields and setting the distance in state
   const getPointsData = (data, distanceInMetersParam) => {
@@ -187,6 +190,11 @@ function App() {
     const handleChangeYear = (e) => {
       // Get the value of the year dropdown and store it in year state
       setYear(e.target.value);
+
+      // After year is selected, enable the Makes dropdown
+      if (e.target.value) {
+        setMakesDisabled(false);
+      }
     };
 
     const years = [];
@@ -210,10 +218,15 @@ function App() {
     function handleChangeMake(e) {
       // Get the value of the makes dropdown and store it in make state
       setSelectedMake(e.target.value);
+
+      // After make is selected, enable the Models dropdown
+      if (e.target.value) {
+        setModelsDisabled(false);
+      }
     }
 
     return (
-      <select aria-label="Select a make" onChange={(e) => handleChangeMake(e)} value={make}>
+      <select aria-label="Select a make" onChange={(e) => handleChangeMake(e)} value={make} disabled={makesDisabled}>
         {/* Populate with option elements based on the years state and its index */}
         <option value="">Select a make</option>
         {makes.map((value, index) => <option key={makes[index]}>{value}</option>)}
@@ -224,10 +237,15 @@ function App() {
   const Models = () => {
     function handleChangeModel(e) {
       setSelectedModel(e.target.value);
+
+      // After model is selected, enable the Trims dropdown
+      if (e.target.value) {
+        setTrimsDisabled(false);
+      }
     }
 
     return (
-      <select aria-label="Select a model" onChange={(e) => handleChangeModel(e)} value={model}>
+      <select aria-label="Select a model" onChange={(e) => handleChangeModel(e)} value={model} disabled={modelsDisabled}>
         {/* Populate with option elements based on the make state and its index */}
         <option value="">Select a model</option>
         {models.map((value, index) => <option key={makes[index]}>{value}</option>)}
@@ -249,7 +267,7 @@ function App() {
     }
 
     return (
-      <select aria-label="Select a trim" onChange={(e) => handleChangeTrim(e)} value={trim}>
+      <select aria-label="Select a trim" onChange={(e) => handleChangeTrim(e)} value={trim} disabled={trimsDisabled}>
         {/* Populate with option elements based on the make state and its index */}
         <option value="">Select a trim</option>
         {trims.map((value, index) => <option key={trims[index]}>{value}</option>)}
@@ -267,8 +285,6 @@ function App() {
     cost = (gallonsSpent * gasPrice).toFixed(2);
   }
 
-  console.log(cost);
-
   return (
     <div>
       <h1>Gasatobe <EmojiContainer /></h1>
@@ -280,25 +296,32 @@ function App() {
             The driving distance from Point A to B is&nbsp;
             <strong>{distance.rows[0].elements[0].distance.text}</strong>.
           </p>
+
+          <h3>Select your vehicle:</h3>
+          <Years />
+          <Makes disabled={makesDisabled} />
+          <Models disabled={modelsDisabled} />
+          <Trims disabled={trimsDisabled} />
         </div>
       )}
-      <h3>Select your vehicle:</h3>
-      <Years />
-      <Makes />
-      <Models />
-      <Trims />
 
-      <p>
-        The estimated combined MPG for your vehicle is&nbsp;
-        <strong>{mpg}</strong> miles per gallon.
-      </p>
+      {mpg !== undefined && (
+        <div>
+          <p>
+            The estimated combined MPG for your vehicle is&nbsp;
+            <strong>{mpg}</strong> miles per gallon.
+          </p>
 
-      <GasPrice parentCallback={getGasPrice} />
+          <GasPrice parentCallback={getGasPrice} />
+        </div>
+      )}
 
-      <p>
-        It's going to cost about&nbsp;
-        <strong>${cost}</strong> to travel from Point A to Point B!
-      </p>
+      {gasPrice !== undefined && (
+        <p>
+          It's going to cost about&nbsp;
+          <strong>${cost}</strong> to travel from Point A to Point B!
+        </p>
+      )}
     </div>
   );
 }
