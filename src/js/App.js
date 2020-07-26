@@ -12,6 +12,11 @@ function App() {
   const [makes, setMakes] = useState([]);
   const [make, setSelectedMake] = useState();
   const [models, setModel] = useState([]);
+  const [model, setSelectedModel] = useState();
+  const [trims, setTrim] = useState([]);
+
+  console.log('makes: ', makes);
+  console.log('models: ', models);
 
   // Getting data from input fields and setting the distance in state
   const getInputData = (data) => {
@@ -68,6 +73,33 @@ function App() {
       .catch((error) => console.log('error is', error));
   };
 
+  const fetchTrims = () => {
+    fetch(`https://www.fueleconomy.gov/ws/rest/vehicle/menu/options?year=${year}&make=${make}&model=${model}`)
+      // Using text() because response is XML
+      .then((response) => response.text())
+      .then((data) => {
+        // Converting retrieved XML to JS object
+        const trimsByYearUnformatted = convert.xml2js(data, { compact: true, spaces: 2 });
+
+        // Traversing object so it's more readable
+        const trimsByYear = trimsByYearUnformatted.menuItems.menuItem;
+
+        console.log('wat');
+
+        // Creating a local empty array for future storage
+        const trimsLocal = [];
+
+        for (let i = 0; i < trimsByYear.length; i += 1) {
+          // For each make by year, push it into the local array defined above
+          trimsLocal.push(trimsByYear[i].text._text);
+        }
+
+        // Store local array into makes state
+        setTrim(trimsLocal);
+      })
+      .catch((error) => console.log('error is', error));
+  };
+
   const handleChangeYear = (e) => {
     // Get the value of the year dropdown and store it in year state
     setYear(e.target.value);
@@ -87,6 +119,13 @@ function App() {
     }
   }, [make]);
 
+  // Creating callback to make sure model is defined before fetching trims
+  const fetchTrimsCallback = useCallback(() => {
+    if (model) {
+      fetchTrims();
+    }
+  }, [model]);
+
   // Fetch makes each time year is updated
   useEffect(() => {
     fetchMakesCallback();
@@ -96,6 +135,11 @@ function App() {
   useEffect(() => {
     fetchModelsCallback();
   }, [fetchModelsCallback]);
+
+  // Fetch trims each time model is updated
+  useEffect(() => {
+    fetchTrimsCallback();
+  }, [fetchTrimsCallback]);
 
   const Years = () => {
     const years = [];
@@ -132,14 +176,28 @@ function App() {
 
   const Models = () => {
     function handleChangeModel(e) {
+      setSelectedModel(e.target.value);
+    }
+
+    return (
+      <select aria-label="Select a model" onChange={(e) => handleChangeModel(e)} value={model}>
+        {/* Populate with option elements based on the make state and its index */}
+        <option value="">Select a model</option>
+        {models.map((value, index) => <option key={makes[index]}>{value}</option>)}
+      </select>
+    );
+  };
+
+  const Trims = () => {
+    function handleChangeTrim(e) {
       // TODO: make a request to get MPG?
     }
 
     return (
-      <select aria-label="Select a model" onChange={(e) => handleChangeModel(e)}>
+      <select aria-label="Select a trim" onChange={(e) => handleChangeTrim(e)}>
         {/* Populate with option elements based on the make state and its index */}
-        <option value="">Select a model</option>
-        {models.map((value, index) => <option key={makes[index]}>{value}</option>)}
+        <option value="">Select a trim</option>
+        {trims.map((value, index) => <option key={trims[index]}>{value}</option>)}
       </select>
     );
   };
@@ -150,17 +208,19 @@ function App() {
       <h2>Find out how much you'll spend in gas travelling from Point A to B!</h2>
       <PlacesInputs parentCallback={getInputData} />
       {distance !== undefined && (
-        <p>
-          The driving distance from Point A to B is&nbsp;
-          <strong>{distance.rows[0].elements[0].distance.text}</strong>.
-        </p>
+        <div>
+          <p>
+            The driving distance from Point A to B is&nbsp;
+            <strong>{distance.rows[0].elements[0].distance.text}</strong>.
+          </p>
+          <h3>Select your vehicle:</h3>
+        </div>
       )}
-
-      <h3>Select your vehicle:</h3>
 
       <Years />
       <Makes />
       <Models />
+      <Trims />
     </div>
   );
 }
