@@ -79,21 +79,19 @@ function App() {
       .then((response) => response.text())
       .then((data) => {
         // Converting retrieved XML to JS object
-        const trimsByYearUnformatted = convert.xml2js(data, { compact: true, spaces: 2 });
+        const trimsByYearUnformatted = convert.xml2js(data, { compact: true, spaces: 2, alwaysArray: true });
 
-        // Traversing object so it's more readable
-        const trimsByYear = trimsByYearUnformatted.menuItems.menuItem;
+        // // Traversing object so it's more readable
+        const trimsByYear = trimsByYearUnformatted.menuItems[0].menuItem;
 
-        // console.log(trimsByYear[0].value);
-
-        // Creating a local empty array for future storage
+        // // Creating a local empty array for future storage
         const trimsLocal = [];
         const iDsLocal = [];
 
         for (let i = 0; i < trimsByYear.length; i += 1) {
           // For each make by year, push it into the local array defined above
-          trimsLocal.push(trimsByYear[i].text._text);
-          iDsLocal.push(trimsByYear[i].value._text);
+          trimsLocal.push(trimsByYear[i].text[0]._text[0]);
+          iDsLocal.push(trimsByYear[i].value[0]._text[0]);
         }
 
         // Store local array into makes state
@@ -194,13 +192,13 @@ function App() {
   const Trims = () => {
     function handleChangeTrim(e) {
       const indexOfSelectedTrim = trimsArray.findIndex(
-        (indexes) => indexes.text._text === e.target.value,
+        (indexes) => indexes.text[0]._text[0] === e.target.value,
       );
 
       setSelectedTrim(e.target.value);
 
       // Store ID of vehicle, based on selected trim
-      setVehicleId(trimsArray[indexOfSelectedTrim].value._text);
+      setVehicleId(trimsArray[indexOfSelectedTrim].value[0]._text[0]);
     }
 
     return (
