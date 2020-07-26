@@ -67,17 +67,21 @@ function App() {
       .then((response) => response.text())
       .then((data) => {
         // Converting retrieved XML to JS object
-        const modelsByYearUnformatted = convert.xml2js(data, { compact: true, spaces: 2 });
+        const modelsByYearUnformatted = convert.xml2js(data, {
+          compact: true,
+          spaces: 2,
+          alwaysArray: true,
+        });
 
         // Traversing object so it's more readable
-        const modelsByYear = modelsByYearUnformatted.menuItems.menuItem;
+        const modelsByYear = modelsByYearUnformatted.menuItems[0].menuItem;
 
         // Creating a local empty array for future storage
         const modelsLocal = [];
 
         for (let i = 0; i < modelsByYear.length; i += 1) {
           // For each make by year, push it into the local array defined above
-          modelsLocal.push(modelsByYear[i].text._text);
+          modelsLocal.push(modelsByYear[i].text[0]._text[0]);
         }
 
         // Store local array into makes state
