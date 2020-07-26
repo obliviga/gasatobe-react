@@ -27,7 +27,7 @@ function Inputs({ parentCallback }) {
       if (distances.status === 'OK') {
         // If the distance can't be calculated due to the impossibility of driving from Point A to B
         if (distances.rows[0].elements[0].distance === undefined) {
-          alert(`Sorry, Google Maps can't figure out how you could drive from ${distances.origin_addresses[0]} to ${distances.destination_addresses[0]}`);
+          console.log(`Sorry, Google Maps can't figure out how you could drive from ${distances.origin_addresses[0]} to ${distances.destination_addresses[0]}`);
         } else {
           const distanceInMeters = distances.rows[0].elements[0].distance.value;
 
