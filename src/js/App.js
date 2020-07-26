@@ -10,8 +10,8 @@ function App() {
   const [distance, setDistance] = useState();
   const [year, setYear] = useState();
   const [makes, setMakes] = useState([]);
-  const [models, setModel] = useState([]);
   const [make, setSelectedMake] = useState();
+  const [models, setModel] = useState([]);
 
   // Getting data from input fields and setting the distance in state
   const getInputData = (data) => {
@@ -73,17 +73,29 @@ function App() {
     setYear(e.target.value);
   };
 
-  // Creating callback to make sure year is defined before fetching
-  const fetchYearCallback = useCallback(() => {
+  // Creating callback to make sure year is defined before fetching makes
+  const fetchMakesCallback = useCallback(() => {
     if (year) {
       fetchMakesByYear();
     }
   }, [year]);
 
-  // Fetch once above dependencies are met
+  // Creating callback to make sure make is defined before fetching models
+  const fetchModelsCallback = useCallback(() => {
+    if (make) {
+      fetchModels();
+    }
+  }, [make]);
+
+  // Fetch makes each time year is updated
   useEffect(() => {
-    fetchYearCallback();
-  }, [fetchYearCallback]);
+    fetchMakesCallback();
+  }, [fetchMakesCallback]);
+
+  // Fetch models each time make is updated
+  useEffect(() => {
+    fetchModelsCallback();
+  }, [fetchModelsCallback]);
 
   const Years = () => {
     const years = [];
@@ -103,18 +115,6 @@ function App() {
     );
   };
 
-  // Creating callback to make sure year is defined before fetching
-  const fetchModelsCallback = useCallback(() => {
-    if (make) {
-      fetchModels();
-    }
-  }, [make]);
-
-  // Fetch once above dependencies are met
-  useEffect(() => {
-    fetchModelsCallback();
-  }, [fetchModelsCallback]);
-
   const Makes = () => {
     function handleChangeMake(e) {
       // Get the value of the makes dropdown and store it in make state
@@ -132,7 +132,7 @@ function App() {
 
   const Models = () => {
     function handleChangeModel(e) {
-      // TODO:
+      // TODO: make a request to get MPG?
     }
 
     return (
@@ -155,6 +155,9 @@ function App() {
           <strong>{distance.rows[0].elements[0].distance.text}</strong>.
         </p>
       )}
+
+      <h3>Select your vehicle:</h3>
+
       <Years />
       <Makes />
       <Models />
