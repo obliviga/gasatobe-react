@@ -14,9 +14,9 @@ function App() {
   const [models, setModel] = useState([]);
   const [model, setSelectedModel] = useState();
   const [trims, setTrim] = useState([]);
-
-  console.log('makes: ', makes);
-  console.log('models: ', models);
+  const [trim, setSelectedTrim] = useState();
+  const [trimsArray, setTrimsObject] = useState();
+  const [vehicleId, setVehicleId] = useState();
 
   // Getting data from input fields and setting the distance in state
   const getInputData = (data) => {
@@ -84,25 +84,23 @@ function App() {
         // Traversing object so it's more readable
         const trimsByYear = trimsByYearUnformatted.menuItems.menuItem;
 
-        console.log('wat');
+        // console.log(trimsByYear[0].value);
 
         // Creating a local empty array for future storage
         const trimsLocal = [];
+        const iDsLocal = [];
 
         for (let i = 0; i < trimsByYear.length; i += 1) {
           // For each make by year, push it into the local array defined above
           trimsLocal.push(trimsByYear[i].text._text);
+          iDsLocal.push(trimsByYear[i].value._text);
         }
 
         // Store local array into makes state
         setTrim(trimsLocal);
+        setTrimsObject(trimsByYear);
       })
       .catch((error) => console.log('error is', error));
-  };
-
-  const handleChangeYear = (e) => {
-    // Get the value of the year dropdown and store it in year state
-    setYear(e.target.value);
   };
 
   // Creating callback to make sure year is defined before fetching makes
@@ -142,6 +140,11 @@ function App() {
   }, [fetchTrimsCallback]);
 
   const Years = () => {
+    const handleChangeYear = (e) => {
+      // Get the value of the year dropdown and store it in year state
+      setYear(e.target.value);
+    };
+
     const years = [];
 
     // Iterating through 1999 to the current year
@@ -190,11 +193,18 @@ function App() {
 
   const Trims = () => {
     function handleChangeTrim(e) {
-      // TODO: make a request to get MPG?
+      const indexOfSelectedTrim = trimsArray.findIndex(
+        (indexes) => indexes.text._text === e.target.value,
+      );
+
+      setSelectedTrim(e.target.value);
+
+      // Store ID of vehicle, based on selected trim
+      setVehicleId(trimsArray[indexOfSelectedTrim].value._text);
     }
 
     return (
-      <select aria-label="Select a trim" onChange={(e) => handleChangeTrim(e)}>
+      <select aria-label="Select a trim" onChange={(e) => handleChangeTrim(e)} value={trim}>
         {/* Populate with option elements based on the make state and its index */}
         <option value="">Select a trim</option>
         {trims.map((value, index) => <option key={trims[index]}>{value}</option>)}
