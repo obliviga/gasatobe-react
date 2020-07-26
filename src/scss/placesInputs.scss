@@ -1,0 +1,11 @@
+.placesInputs {
+  display: flex;
+
+  .google-places-autocomplete {
+    width: 22rem;
+
+    &:first-child {
+      padding-right: 1rem;
+    }
+  }
+}

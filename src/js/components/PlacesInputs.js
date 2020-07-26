@@ -2,6 +2,8 @@ import React from 'react';
 import GooglePlacesAutocomplete, { geocodeByAddress } from 'react-google-places-autocomplete';
 import googleDistanceMatrix from 'google-distance-matrix';
 
+import '../../scss/placesInputs.scss';
+
 googleDistanceMatrix.key(process.env.REACT_APP_GOOGLE_MAPS_API_KEY);
 
 googleDistanceMatrix.units('imperial');
@@ -65,7 +67,7 @@ function Inputs({ parentCallback }) {
   }
 
   return (
-    <div>
+    <div className="placesInputs">
       <GooglePlacesAutocomplete
         // Passing data from selected value to appropriate function
         onSelect={(data) => getPointA(data)}
