@@ -79,17 +79,22 @@ function App() {
       .then((response) => response.text())
       .then((data) => {
         // Converting retrieved XML to JS object
-        const trimsByYearUnformatted = convert.xml2js(data, { compact: true, spaces: 2, alwaysArray: true });
+        // Setting alwaysArray to true, so that if only one trim is returned, it will still appear
+        const trimsByYearUnformatted = convert.xml2js(data, {
+          compact: true,
+          spaces: 2,
+          alwaysArray: true,
+        });
 
-        // // Traversing object so it's more readable
+        // Traversing object so it's more readable
         const trimsByYear = trimsByYearUnformatted.menuItems[0].menuItem;
 
-        // // Creating a local empty array for future storage
+        // Creating a local empty array for future storage
         const trimsLocal = [];
         const iDsLocal = [];
 
         for (let i = 0; i < trimsByYear.length; i += 1) {
-          // For each make by year, push it into the local array defined above
+          // For each trims and ids by selected vals, push it into the local array defined above
           trimsLocal.push(trimsByYear[i].text[0]._text[0]);
           iDsLocal.push(trimsByYear[i].value[0]._text[0]);
         }
@@ -195,6 +200,7 @@ function App() {
         (indexes) => indexes.text[0]._text[0] === e.target.value,
       );
 
+      // Store selected trim value into its state
       setSelectedTrim(e.target.value);
 
       // Store ID of vehicle, based on selected trim
