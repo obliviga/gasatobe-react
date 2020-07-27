@@ -1,12 +1,11 @@
 import React from 'react';
 import GooglePlacesAutocomplete, { geocodeByAddress } from 'react-google-places-autocomplete';
-import googleDistanceMatrix from 'google-distance-matrix';
 
 import '../../scss/placesInputs.scss';
 
-googleDistanceMatrix.key(process.env.REACT_APP_GOOGLE_MAPS_API_KEY);
+const { google } = window;
 
-googleDistanceMatrix.units('imperial');
+const googleDistanceMatrixService = new google.maps.DistanceMatrixService();
 
 // Defining object to store coordinates both points
 const points = {
@@ -15,37 +14,39 @@ const points = {
 };
 
 function Inputs({ parentCallback }) {
-  function getDistance() {
-    const origins = [`${points.pointA}`];
-    const destinations = [`${points.pointB}`];
+  function getDistance(distances, status) {
+    if (status === 'OK') {
+      // If the distance can't be calculated due to the impossibility of driving from Point A to B
+      if (distances.rows[0].elements[0].distance === undefined) {
+        console.log(`Sorry, Google Maps can't figure out how you could drive from ${distances.origin_addresses[0]} to ${distances.destination_addresses[0]}`);
+      } else {
+        const distanceInMeters = distances.rows[0].elements[0].distance.value;
 
-    googleDistanceMatrix.matrix(origins, destinations, (err, distances) => {
-      if (err) {
-        console.log(err);
+        // Pass the distance data to the parent App
+        parentCallback(distances, distanceInMeters);
       }
+    }
+  }
 
-      if (distances.status === 'OK') {
-        // If the distance can't be calculated due to the impossibility of driving from Point A to B
-        if (distances.rows[0].elements[0].distance === undefined) {
-          console.log(`Sorry, Google Maps can't figure out how you could drive from ${distances.origin_addresses[0]} to ${distances.destination_addresses[0]}`);
-        } else {
-          const distanceInMeters = distances.rows[0].elements[0].distance.value;
-
-          // Pass the distance data to the parent App
-          parentCallback(distances, distanceInMeters);
-        }
-      }
-    });
+  // Set options for Google Distance Matrix
+  function setOptions() {
+    googleDistanceMatrixService.getDistanceMatrix({
+      origins: [`${points.pointA}`],
+      destinations: [`${points.pointB}`],
+      travelMode: 'DRIVING',
+      unitSystem: google.maps.UnitSystem.IMPERIAL,
+    }, getDistance);
   }
 
   function getPointA(data) {
     // Geocode the address
     geocodeByAddress(data.description).then(() => {
-      // Retrieve the geocoded data and store it inside local points object
+      // Store value from Point A input into local object
       points.pointA = data.description;
 
-      // If Point B input has a value, then calculate the distance
+      // If Point B input has a value, then set the options and calculate the distance
       if (points.pointB !== null) {
+        setOptions();
         getDistance();
       }
     }, (reason) => {
@@ -55,10 +56,12 @@ function Inputs({ parentCallback }) {
 
   function getPointB(data) {
     geocodeByAddress(data.description).then(() => {
+      // Store value from Point B input into local object
       points.pointB = data.description;
 
-      // Calculate distance only if Point A has a value
+      // Set options then calculate distance only if Point A has a value
       if (points.pointA !== null) {
+        setOptions();
         getDistance();
       }
     }, (reason) => {
