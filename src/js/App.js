@@ -134,8 +134,6 @@ function App() {
         // Traversing object so it's more readable
         const mpgLocal = vehicleIdUnformatted.vehicle.comb08._text;
 
-        console.log(mpgLocal);
-
         // Store local mpg into state
         setMPG(mpgLocal);
       })
@@ -321,8 +319,8 @@ function App() {
 
           <GasPrice parentCallback={getGasPrice} />
           <p>
-            It's going to cost about&nbsp;
-            <strong>${cost}</strong> to travel from Point A to Point B!
+            The cost in gas to travel from Point A to Point B will be around&nbsp;
+            <strong>${cost}</strong>
           </p>
         </div>
       )}
