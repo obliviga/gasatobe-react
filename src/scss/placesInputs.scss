@@ -9,11 +9,14 @@
   }
 
   .google-places-autocomplete {
-    width: 100%;
     margin-bottom: 1rem;
 
-    @include media(">tablet") {
-      width: 50%;
+    input {
+      width: 100%;
+
+      @include media(">tablet") {
+        width: 50%;
+      }
     }
   }
 }

@@ -1,0 +1,19 @@
+@import 'include-media/dist/_include-media';
+
+label[for="gasPrice"] {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  span {
+    width: 50%;
+  }
+
+  input {
+    width: calc(50% - 1rem);
+  }
+
+  @include media(">tablet") {
+    
+  }
+}

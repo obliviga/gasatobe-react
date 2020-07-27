@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import '../../scss/gasPrice.scss';
+
 const GasPrice = ({ parentCallback }) => {
   const [gasPrice, setGasPrice] = useState();
 
@@ -15,7 +17,7 @@ const GasPrice = ({ parentCallback }) => {
 
   return (
     <label htmlFor="gasPrice">
-      Update how much you pay for gas per gallon:&nbsp;
+      <span>Update how much you pay for gas per gallon:&nbsp;</span>
       <input id="gasPrice" type="number" placeholder="e.g. 2.99" defaultValue={2.99} onChange={handleOnChange} min="0" max="10" step=".01" autoFocus/>
     </label>
   );

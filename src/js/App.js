@@ -298,10 +298,10 @@ function App() {
       <PlacesInputs parentCallback={getPointsData} />
       {distance !== undefined && (
         <div>
-          <p>
-            The driving distance from Point A to B is&nbsp;
+          <small>
+            <i className="fas fa-map-marker-alt" />&nbsp;The driving distance from Point A to B is&nbsp;
             <strong>{distance.rows[0].elements[0].distance.text}</strong>.
-          </p>
+          </small>
 
           <h3>
             Select your vehicle:
@@ -315,16 +315,16 @@ function App() {
 
       {mpg !== undefined && (
         <div>
-          <p>
-            The estimated combined MPG for your {vehicle} is&nbsp;
+          <small>
+            <i className="fas fa-info-circle" />&nbsp;The estimated combined MPG for your {vehicle} is&nbsp;
             <strong>{mpg} miles per gallon</strong>.
-          </p>
+          </small>
 
           <GasPrice parentCallback={getGasPrice} />
-          <p>
+          <h4>
             The cost in gas to travel from Point A to Point B will be around&nbsp;
             <strong>${cost}</strong>
-          </p>
+          </h4>
         </div>
       )}
     </div>
