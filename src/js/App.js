@@ -1,10 +1,12 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import convert from 'xml-js';
 import fetch from 'node-fetch';
+import { toast, ToastContainer } from 'react-toastify';
 import PlacesInputs from './components/PlacesInputs';
 import EmojiContainer from './components/EmojiContainer';
 import GasPrice from './components/GasPrice';
 
+import 'react-toastify/dist/ReactToastify.css';
 import 'react-google-places-autocomplete/dist/index.min.css';
 
 function App() {
@@ -24,6 +26,7 @@ function App() {
   const [makesDisabled, setMakesDisabled] = useState(true);
   const [modelsDisabled, setModelsDisabled] = useState(true);
   const [trimsDisabled, setTrimsDisabled] = useState(true);
+  const [isEV, setIsEV] = useState(false);
 
   // Getting data from input fields and setting the distance in state
   const getPointsData = (data, distanceInMetersParam) => {
@@ -136,6 +139,18 @@ function App() {
 
         // Store local mpg into state
         setMPG(mpgLocal);
+
+        // If EV, show toast and set Make dropdown to default value
+        // Disable models and trims dropdowns as well
+        if (vehicleIdUnformatted.vehicle.atvType._text === 'EV') {
+          setIsEV(true);
+          toast('🎉 You chose an electric vehicle. CONGRATULATIONS! This app is useless for you. 🥳', { autoClose: 7000 });
+          setSelectedMake();
+          setModelsDisabled(true);
+          setTrimsDisabled(true);
+        } else {
+          setIsEV(false);
+        }
       })
       .catch((error) => console.log('error is', error));
   };
@@ -296,7 +311,8 @@ function App() {
       <h1>GasAtoB <EmojiContainer /></h1>
       <h2>Find out how much you'll spend in gas travelling from Point A to B!</h2>
       <PlacesInputs parentCallback={getPointsData} />
-      {distance !== undefined && (
+      {/* If distance exists */}
+      {distance && (
         <div>
           <small>
             <i className="fas fa-map-marker-alt" />&nbsp;The driving distance from Point A to B is&nbsp;
@@ -313,7 +329,8 @@ function App() {
         </div>
       )}
 
-      {mpg !== undefined && (
+      {/* If mpg exists and a non-EV has been selected */}
+      {mpg && !isEV && (
         <div>
           <small>
             <i className="fas fa-info-circle" />&nbsp;The estimated combined MPG for your {vehicle} is&nbsp;
@@ -327,6 +344,7 @@ function App() {
           </h4>
         </div>
       )}
+      <ToastContainer />
     </div>
   );
 }
