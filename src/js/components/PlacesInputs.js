@@ -1,8 +1,7 @@
 import React from 'react';
 import GooglePlacesAutocomplete, { geocodeByAddress } from 'react-google-places-autocomplete';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
-import 'react-toastify/dist/ReactToastify.css';
 import '../../scss/placesInputs.scss';
 
 const { google } = window;
@@ -85,8 +84,6 @@ function Inputs({ parentCallback }) {
         placeholder="Enter place / address for Point B"
         idPrefix="pointB"
       />
-
-      <ToastContainer />
     </div>
   );
 }
