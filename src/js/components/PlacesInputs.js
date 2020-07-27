@@ -1,6 +1,8 @@
 import React from 'react';
 import GooglePlacesAutocomplete, { geocodeByAddress } from 'react-google-places-autocomplete';
+import { ToastContainer, toast } from 'react-toastify';
 
+import 'react-toastify/dist/ReactToastify.css';
 import '../../scss/placesInputs.scss';
 
 const { google } = window;
@@ -15,10 +17,11 @@ const points = {
 
 function Inputs({ parentCallback }) {
   function getDistance(distances, status) {
-    if (status === 'OK') {
-      // If the distance can't be calculated due to the impossibility of driving from Point A to B
-      if (distances.rows[0].elements[0].distance === undefined) {
-        console.log(`Sorry, Google Maps can't figure out how you could drive from ${distances.origin_addresses[0]} to ${distances.destination_addresses[0]}`);
+    // Attempt to get the distance if both distances have been entered and the Google Maps API is up
+    if (distances && status === 'OK') {
+      // If the distance can't be calculated, show an error toast
+      if (distances.rows[0].elements[0].status === 'ZERO_RESULTS') {
+        toast.error("Your search appears to be outside of Google's current coverage area for driving. Sorry about that!");
       } else {
         const distanceInMeters = distances.rows[0].elements[0].distance.value;
 
@@ -82,6 +85,8 @@ function Inputs({ parentCallback }) {
         placeholder="Enter place / address for Point B"
         idPrefix="pointB"
       />
+
+      <ToastContainer />
     </div>
   );
 }
