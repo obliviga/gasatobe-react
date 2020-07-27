@@ -71,12 +71,12 @@ function Inputs({ parentCallback }) {
       <GooglePlacesAutocomplete
         // Passing data from selected value to appropriate function
         onSelect={(data) => getPointA(data)}
-        placeholder="Enter place or address for Point A"
+        placeholder="Enter place / address for Point A"
       />
 
       <GooglePlacesAutocomplete
         onSelect={(data) => getPointB(data)}
-        placeholder="Enter place or address for Point B"
+        placeholder="Enter place / address for Point B"
         idPrefix="pointB"
       />
     </div>
