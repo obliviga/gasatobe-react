@@ -205,6 +205,9 @@ function App() {
     for (let i = 1999; i < new Date().getFullYear(); i += 1) {
       // Add the index to the array, plus 1 to each index
       years.push(i + 1);
+
+      // Reverse the values in the array so that the latest years appear first
+      years.sort((a, b) => b - a);
     }
 
     return (
