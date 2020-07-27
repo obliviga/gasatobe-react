@@ -20,7 +20,7 @@ function App() {
   const [trimsArray, setTrimsObject] = useState();
   const [vehicleId, setVehicleId] = useState();
   const [mpg, setMPG] = useState();
-  const [gasPrice, setGasPrice] = useState();
+  const [gasPrice, setGasPrice] = useState(2.99);
   const [makesDisabled, setMakesDisabled] = useState(true);
   const [modelsDisabled, setModelsDisabled] = useState(true);
   const [trimsDisabled, setTrimsDisabled] = useState(true);
@@ -282,6 +282,7 @@ function App() {
   let distanceInMiles;
   let gallonsSpent;
   let cost;
+  const vehicle = `${year} ${model} ${make}`;
 
   if (distanceInMeters !== undefined) {
     distanceInMiles = distanceInMeters / 1609;
@@ -291,7 +292,7 @@ function App() {
 
   return (
     <div>
-      <h1>Gasatobe <EmojiContainer /></h1>
+      <h1>GasAtoB <EmojiContainer /></h1>
       <h2>Find out how much you'll spend in gas travelling from Point A to B!</h2>
       <PlacesInputs parentCallback={getPointsData} />
       {distance !== undefined && (
@@ -301,30 +302,29 @@ function App() {
             <strong>{distance.rows[0].elements[0].distance.text}</strong>.
           </p>
 
-          <h3>Select your vehicle:</h3>
-          <Years />
-          <Makes disabled={makesDisabled} />
-          <Models disabled={modelsDisabled} />
-          <Trims disabled={trimsDisabled} />
+          <h3>
+            Select your vehicle:
+            <Years />
+            <Makes disabled={makesDisabled} />
+            <Models disabled={modelsDisabled} />
+            <Trims disabled={trimsDisabled} />
+          </h3>
         </div>
       )}
 
       {mpg !== undefined && (
         <div>
           <p>
-            The estimated combined MPG for your vehicle is&nbsp;
-            <strong>{mpg}</strong> miles per gallon.
+            The estimated combined MPG for your {vehicle} is&nbsp;
+            <strong>{mpg} miles per gallon</strong>.
           </p>
 
           <GasPrice parentCallback={getGasPrice} />
+          <p>
+            It's going to cost about&nbsp;
+            <strong>${cost}</strong> to travel from Point A to Point B!
+          </p>
         </div>
-      )}
-
-      {gasPrice !== undefined && (
-        <p>
-          It's going to cost about&nbsp;
-          <strong>${cost}</strong> to travel from Point A to Point B!
-        </p>
       )}
     </div>
   );
