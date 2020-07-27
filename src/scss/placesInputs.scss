@@ -1,12 +1,19 @@
+@import 'include-media/dist/_include-media';
+
 .placesInputs {
   display: flex;
-  margin-bottom: 1rem;
+  flex-direction: column;
+
+  @include media(">tablet") {
+    flex-direction: row;
+  }
 
   .google-places-autocomplete {
-    width: 22rem;
+    width: 100%;
+    margin-bottom: 1rem;
 
-    &:first-child {
-      padding-right: 1rem;
+    @include media(">tablet") {
+      width: 50%;
     }
   }
 }

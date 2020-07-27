@@ -1,22 +1,22 @@
+html {
+  padding: 1em calc(39% - 16em);
+}
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   background-color: #252526;
   color: #d4d4d4;
   padding-left: 1rem;
   padding-right: 1rem;
 }
 
-h1 {
-  display: inline-flex;
-  width: 100%;
+h3 {
+  display: flex;
+  flex-direction: column;
 }
 
 select {
   margin-right: 1rem;
-
-  &:first-of-type {
-    margin-left: 1rem;
-  }
+  margin-bottom: 1rem;
+  height: 35px;
 }
