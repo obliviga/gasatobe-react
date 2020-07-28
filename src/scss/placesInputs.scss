@@ -13,9 +13,43 @@
 
     input {
       width: 100%;
+      padding-right: 2rem;
+    }
+  }
 
+  .inputWithCloseButton {
+    position: relative;
+    width: 100%;
+
+    &:first-of-type {
       @include media(">tablet") {
-        width: 50%;
+        margin-right: .5rem;
+      }
+    }
+
+    &:last-of-type {
+      @include media(">tablet") {
+        margin-left: .5rem;
+      }
+    }
+
+    button {
+      padding: 0;
+      background: transparent;
+      border: 0;
+      cursor: pointer;
+      width: 16px;
+      height: 16px;
+      margin-top: 12px;
+      position: absolute;
+      top: 0;
+      right: 8px;
+
+      i {
+        font-size: 16px;
+        height: 16px;
+        width: 16px;
+        opacity: .5;
       }
     }
   }

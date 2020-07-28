@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import GooglePlacesAutocomplete, { geocodeByAddress } from 'react-google-places-autocomplete';
 import { toast } from 'react-toastify';
 
@@ -15,12 +15,15 @@ const points = {
 };
 
 function Inputs({ parentCallback }) {
+  const googlePlacesAutocompleteRefA = useRef();
+  const googlePlacesAutocompleteRefB = useRef();
+
   function getDistance(distances, status) {
     // Attempt to get the distance if both distances have been entered and the Google Maps API is up
     if (distances && status === 'OK') {
       // If the distance can't be calculated, show an error toast
       if (distances.rows[0].elements[0].status === 'ZERO_RESULTS') {
-        toast.error("Your search appears to be outside of Google's current coverage area for driving. Sorry about that!");
+        toast.error("Your search appears to be outside of Google's current coverage area for driving. Sorry about that!", { autoClose: 7000 });
       } else {
         const distanceInMeters = distances.rows[0].elements[0].distance.value;
 
@@ -73,17 +76,29 @@ function Inputs({ parentCallback }) {
 
   return (
     <div className="placesInputs">
-      <GooglePlacesAutocomplete
-        // Passing data from selected value to appropriate function
-        onSelect={(data) => getPointA(data)}
-        placeholder="Enter place / address for Point A"
-      />
+      <div className="inputWithCloseButton">
+        <GooglePlacesAutocomplete
+          // Passing data from selected value to appropriate function
+          onSelect={(data) => getPointA(data)}
+          placeholder="Enter place / address for Point A"
+          ref={googlePlacesAutocompleteRefA}
+        />
+        <button type="button" aria-label="clear point A input" onClick={() => googlePlacesAutocompleteRefA.current.clearValue()}>
+          <i className="fas fa-times" />
+        </button>
+      </div>
 
-      <GooglePlacesAutocomplete
-        onSelect={(data) => getPointB(data)}
-        placeholder="Enter place / address for Point B"
-        idPrefix="pointB"
-      />
+      <div className="inputWithCloseButton">
+        <GooglePlacesAutocomplete
+          onSelect={(data) => getPointB(data)}
+          placeholder="Enter place / address for Point B"
+          idPrefix="pointB"
+          ref={googlePlacesAutocompleteRefB}
+        />
+        <button type="button" aria-label="clear point B input" onClick={() => googlePlacesAutocompleteRefB.current.clearValue()}>
+          <i className="fas fa-times" />
+        </button>
+      </div>
     </div>
   );
 }

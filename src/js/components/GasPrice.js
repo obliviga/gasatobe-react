@@ -9,7 +9,7 @@ const GasPrice = ({ parentCallback }) => {
   const handleOnChange = (e) => {
     // If user enters a negative number, show error toast
     if (Math.sign(e.target.value) === -1) {
-      toast.error('Gas prices can only be positive values 🤓');
+      toast.error('Gas prices can only be positive values 🤓', { autoClose: 7000 });
     } else {
       setGasPrice(e.target.value);
       parentCallback(e.target.value);
