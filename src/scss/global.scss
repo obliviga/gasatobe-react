@@ -10,6 +10,10 @@ body {
   padding-right: 1rem;
 }
 
+#root > div {
+  position: relative;
+}
+
 h3 {
   display: flex;
   flex-direction: column;
@@ -44,4 +48,17 @@ i {
 
 .fa-map-marker-alt {
   color: #dc4b3e;
+}
+
+.github-link {
+  position: absolute;
+  right: 0;
+
+  i {
+    color: #d4d4d4;
+
+    &:after {
+      font-size: 32px;
+    }
+  }
 }
