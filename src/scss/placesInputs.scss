@@ -13,13 +13,13 @@
 
     input {
       width: 100%;
-      padding-right: 2rem;
+      border-radius: 0;
     }
   }
 
   .inputWithCloseButton {
-    position: relative;
     width: 100%;
+    display: flex;
 
     &:first-of-type {
       @include media(">tablet") {
@@ -35,14 +35,14 @@
 
     button {
       padding: 0;
-      background: transparent;
+      background: #d4d4d4;
       border: 0;
       cursor: pointer;
       width: 40px;
-      height: 42px;
-      position: absolute;
-      top: 0;
-      right: -7px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
       i {
         font-size: 16px;
