@@ -10,7 +10,7 @@ function EmojiContainer() {
 
   // Add class on click
   function handleClick() {
-    addAnimation(true);
+    addAnimation(false);
   }
 
   const EmojiContainerContent = () => <span className="gas-emoji">⛽</span>;

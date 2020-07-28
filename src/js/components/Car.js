@@ -8,7 +8,7 @@ function Car(props) {
 
   // Set animation state to true
   function handleClick() {
-    addAnimation(true);
+    addAnimation(false);
 
     // Passing onClick prop to EmojiContainer's callback on <Car />
     props.onClick();
