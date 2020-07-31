@@ -83,9 +83,9 @@ function Inputs({ parentCallback }) {
           placeholder="Enter place / address for Point A"
           ref={googlePlacesAutocompleteRefA}
         />
-        {/* <button type="button" aria-label="clear point A input" onClick={() => googlePlacesAutocompleteRefA.current.clearValue()}>
+        <button type="button" aria-label="clear point A input" onClick={() => googlePlacesAutocompleteRefA.current.clearValue()}>
           <i className="fas fa-times" />
-        </button> */}
+        </button>
       </div>
 
       <div className="inputWithCloseButton">
@@ -95,9 +95,9 @@ function Inputs({ parentCallback }) {
           idPrefix="pointB"
           ref={googlePlacesAutocompleteRefB}
         />
-        {/* <button type="button" aria-label="clear point B input" onClick={() => googlePlacesAutocompleteRefB.current.clearValue()}>
+        <button type="button" aria-label="clear point B input" onClick={() => googlePlacesAutocompleteRefB.current.clearValue()}>
           <i className="fas fa-times" />
-        </button> */}
+        </button>
       </div>
     </div>
   );
