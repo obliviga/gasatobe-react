@@ -309,6 +309,7 @@ function App() {
   return (
     <div>
       <a aria-label="visit repo on github" className="github-link" href="https://github.com/obliviga/gasatobe-react" target="_blank" rel="noopener noreferrer"><i className="fab fa-github" /></a>
+      <img src="https://developers.google.com/maps/documentation/images/powered_by_google_on_non_white.png" className="poweredByGoogle" alt="powered by google" />
       <h1>GasAtoB <EmojiContainer /></h1>
       <h2>Find out how much you'll spend in gas travelling from Point A to B!</h2>
       <PlacesInputs parentCallback={getPointsData} />
