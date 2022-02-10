@@ -9,7 +9,7 @@
     "eslint-config-airbnb": "^18.2.0",
     "include-media": "^1.4.9",
     "node-fetch": "^2.6.0",
-    "node-sass": "^4.14.1",
+    "node-sass": "^7.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-google-places-autocomplete": "^2.3.1",
